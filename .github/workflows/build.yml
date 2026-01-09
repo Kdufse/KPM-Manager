@@ -53,13 +53,22 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           packages: ''
+            - name: Configure Gradle properties
 
-      - name: Install toolchain
-        run: |
-          rustup default stable
-          rustup update stable
-          cargo install cargo-ndk
-          rustup target install aarch64-linux-android
+      run: |
+        echo 'org.gradle.parallel=true' >> gradle.properties
+        echo 'org.gradle.vfs.watch=true' >> gradle.properties
+        echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
+        echo 'android.native.buildOutput=verbose' >> gradle.properties
+        sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
+
+      - name: Configure Gradle properties
+      run: |
+        echo 'org.gradle.parallel=true' >> gradle.properties
+        echo 'org.gradle.vfs.watch=true' >> gradle.properties
+        echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
+        echo 'android.native.buildOutput=verbose' >> gradle.properties
+        sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
