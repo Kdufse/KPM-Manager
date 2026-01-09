@@ -53,22 +53,13 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           packages: ''
-            - name: Configure Gradle properties
 
-      run: |
-        echo 'org.gradle.parallel=true' >> gradle.properties
-        echo 'org.gradle.vfs.watch=true' >> gradle.properties
-        echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
-        echo 'android.native.buildOutput=verbose' >> gradle.properties
-        sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
-
-      - name: Configure Gradle properties
-      run: |
-        echo 'org.gradle.parallel=true' >> gradle.properties
-        echo 'org.gradle.vfs.watch=true' >> gradle.properties
-        echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
-        echo 'android.native.buildOutput=verbose' >> gradle.properties
-        sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
+      - name: Install toolchain
+        run: |
+          rustup default stable
+          rustup update stable
+          cargo install cargo-ndk
+          rustup target install aarch64-linux-android
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
@@ -88,7 +79,7 @@ jobs:
 
       - name: Sign Release
         env:
-          SIGNING_KEY: ${{ secrets. ANDROID_KEY_STORE }}
+          SIGNING_KEY: ${{ secrets.ANDROID_KEY_STORE }}
           BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
         if: ${{ env.SIGNING_KEY != '' }}
         continue-on-error: true
@@ -96,17 +87,17 @@ jobs:
         id: sign_app
         with:
           releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets. ANDROID_KEY_STORE }}
-          alias: ${{ secrets. ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets. ANDROID_KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          signingKeyBase64: ${{ secrets.ANDROID_KEY_STORE }}
+          alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets. ANDROID_KEY_PASSWORD }}
           zipAlign: true
 
       - name: Upload Signed APK Artifact
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: KPM-Manager-Signed-APK
+          name: APatchPlus-Signed-APK
           path: app/build/outputs/apk/release/*.apk
 
       - name: Post to channel
