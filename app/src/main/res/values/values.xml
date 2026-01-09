@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KPM Manager</string>
+    <string name="app_package">me.kdufse.kpmodulemanager</me>
+
+    <string name="home_super_key">超级密钥</string>
+    <string name="home_set_super_key">设置你的超级密钥</string>
+    <string name="home_enter_super_key">请输入超级密钥</string>
+    <string name="home_super_key_hint">超级密钥用于管理你的KPModule，请牢记！</string>
+    <string name="home_incorrect_super_key">超级密钥错误，请重试</string>
+    <string name="home_no_super_key">你还没有设置超级密钥！</string>
+
+    <string name="home_kernel_version">内核版本</string>
+    <string name="home_kernel_architecture">内核架构</string>
+
+    <string name="home_device_model">设备型号</string>
+    <string name="home_android_version">Android版本</string>
+    <string name="home_manager_version">KPM Manager版本</string>
+    <string name="home_superuser_status">超级用户状态</string>
+    <string name="home_superuser_granted">已授予超级用户权限</string>
+    <string name="home_superuser_denied">未授予超级用户权限</string>
+
+    <string name="home_loaded_modules">已加载的内核模块数</string>
+
+    <string name="module_list_title">内核模块</string>
+    <string name="module_list_title">已加载的内核模块</string>
+    <string name="module_list_empty">没有已加载的内核模块</string>
+    <string name="module_list_refresh">刷新模块列表</string>
+    <string name="module_list_load_module">加载内核模块</string>
+    <string name="module_list_unload_module">卸载</string>
+    <string name="module_list_load_success">内核模块加载成功</string>
+    <string name="module_list_load_failure">内核模块加载失败</string>
+    <string name="module_list_unload_success">内核模块卸载成功</string>
+    <string name="module_list_unload_failure">内核模块卸载失败</string>
+
+</resources>
