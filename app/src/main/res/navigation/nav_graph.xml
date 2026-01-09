@@ -1,10 +1,45 @@
-<fragment
-    android:id="@+id/kpmFragment"
-    android:name="me.kdufse.kpmodulemanager.ui.kpm.KPMActivity"
-    android:label="@string/module_list_title"
-    tools:layout="@layout/activity_kpm">
-    
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+    <!-- 首页 -->
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="me.kdufse.kpmodulemanager.ui.home.HomeFragment"
+        android:label="@string/navigation_home"
+        tools:layout="@layout/fragment_home" />
+
+    <!-- 模块管理 -->
+    <fragment
+        android:id="@+id/navigation_modules"
+        android:name="me.kdufse.kpmodulemanager.ui.kpm.KPMFragment"
+        android:label="@string/navigation_modules"
+        tools:layout="@layout/fragment_kpm" />
+
+    <!-- 设置 -->
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="me.kdufse.kpmodulemanager.ui.settings.SettingsFragment"
+        android:label="@string/navigation_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <!-- 关于 -->
+    <fragment
+        android:id="@+id/navigation_about"
+        android:name="me.kdufse.kpmodulemanager.ui.about.AboutFragment"
+        android:label="@string/navigation_about"
+        tools:layout="@layout/fragment_about" />
+
+    <!-- 动作定义 -->
     <action
-        android:id="@+id/action_home_to_kpm"
-        app:destination="@id/kpmFragment" />
-</fragment>
+        android:id="@+id/action_home_to_modules"
+        app:destination="@id/navigation_modules" />
+        
+    <action
+        android:id="@+id/action_modules_to_home"
+        app:destination="@id/navigation_home" />
+
+</navigation>

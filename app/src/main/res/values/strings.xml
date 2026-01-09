@@ -34,4 +34,15 @@
     <string name="module_list_unload_success">内核模块卸载成功</string>
     <string name="module_list_unload_failure">内核模块卸载失败</string>
 
+    <!-- 底部导航栏文字 -->
+    <string name="navigation_home">首页</string>
+    <string name="navigation_modules">模块管理</string>
+    <string name="navigation_settings">设置</string>
+    <string name="navigation_about">关于</string>
+
+    <!-- 工具栏菜单 -->
+    <string name="action_search">搜索</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_settings">设置</string>
+
 </resources>
