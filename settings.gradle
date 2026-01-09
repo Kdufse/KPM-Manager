@@ -1,19 +1,19 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
 dependencyResolutionManagement {
-    // 移除 repositoriesMode 设置，或者设为 PREFER_SETTINGS
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
-rootProject.name = "KPM-Manager"
+rootProject.name = "KPM Manager"
 include ':app'
