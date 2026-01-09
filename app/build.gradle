@@ -39,6 +39,8 @@ android {
 
     buildFeatures {
         viewBinding true
+        // 如果不需要数据绑定，可以移除 dataBinding
+        // dataBinding true
     }
 }
 
