@@ -79,7 +79,7 @@ jobs:
 
       - name: Sign Release
         env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY: ${{ secrets. ANDROID_KEY_STORE }}
           BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
         if: ${{ env.SIGNING_KEY != '' }}
         continue-on-error: true
@@ -87,10 +87,10 @@ jobs:
         id: sign_app
         with:
           releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+          signingKeyBase64: ${{ secrets. ANDROID_KEY_STORE }}
+          alias: ${{ secrets. ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets. ANDROID_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           zipAlign: true
 
       - name: Upload Signed APK Artifact
