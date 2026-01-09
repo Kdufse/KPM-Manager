@@ -1,0 +1,10 @@
+<fragment
+    android:id="@+id/kpmFragment"
+    android:name="me.kdufse.kpmodulemanager.ui.kpm.KPMActivity"
+    android:label="@string/module_list_title"
+    tools:layout="@layout/activity_kpm">
+    
+    <action
+        android:id="@+id/action_home_to_kpm"
+        app:destination="@id/kpmFragment" />
+</fragment>
