@@ -21,6 +21,6 @@
         <item name="colorOnPrimary">@color/white</item>
     </style>
 
-    <style name="Theme.KPMManager" parent="Base.Theme.KPMManager" />
+    <style name="Theme.KPMManager" parent="Base.Theme.KPMManager" /></style>
 </resources>
 
