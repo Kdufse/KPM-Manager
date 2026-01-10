@@ -14,6 +14,7 @@
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView</item>
         <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
     </style>
+    </style>
 
     <!-- 底部导航栏主题 -->
     <style name="BottomNavigationTheme" parent="ThemeOverlay.MaterialComponents.BottomNavigationView">
