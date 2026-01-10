@@ -117,13 +117,6 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            version = "3.28.0+"
-            path("src/main/cpp/CMakeLists.txt")
-        }
-    }
-
     androidResources {
         generateLocaleConfig = true
     }
