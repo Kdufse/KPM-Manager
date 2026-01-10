@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">KPM Manager</string>
-    <string name="app_package">me.kdufse.kpmodulemanager</me>
+    <string name="app_package">me.kdufse.kpmodulemanager</string>
 
     <string name="home_super_key">超级密钥</string>
     <string name="home_set_super_key">设置你的超级密钥</string>
