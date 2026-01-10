@@ -1,132 +1,61 @@
-name: Build Manager
+name: Build Android APK
 
 on:
   push:
-    tags: [ "*" ]
-    branches: [ "main" ]
-    paths:
-      - '.github/workflows/build.yml'
-      - 'app/**'
-      - 'apd/**'
-      - 'build.gradle.kts'
-      - 'gradle/libs.versions.toml'
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
-    paths:
-      - '.github/workflows/build.yml'
-      - 'app/**'
-      - 'apd/**'
-      - 'build.gradle.kts'
-      - 'gradle/libs.versions.toml'
-  workflow_call:
+    branches: [ "main", "master" ]
+  # 允许手动触发此工作流
   workflow_dispatch:
 
 jobs:
-  build-manager:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    # 在支持的情况下，可以设置为 macos-latest 以获取原生性能
+    # runs-on: macos-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Generate version
-        id: parse_version
-        run: |
-          COMMIT_NUM=$(git rev-list --count HEAD)
-          VERSION=$(echo "$COMMIT_NUM + 200 + 10000" | bc)
-          echo "Generated Version: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # 可选：'zulu', 'corretto' 等
+        java-version: '17'
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: jetbrains
-          java-version: 21
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+    - name: Grant execute permission for Gradle Wrapper
+      # 确保项目中的 gradlew 脚本有执行权限
+      run: chmod +x ./gradlew
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: ''
+    - name: Cache Gradle dependencies
+      # 缓存 Gradle 依赖，以显著加快后续构建速度
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
-      - name: Install toolchain
-        run: |
-          rustup default stable
-          rustup update stable
-          cargo install cargo-ndk
-          rustup target install aarch64-linux-android
+    - name: Build with Gradle (Debug)
+      # 构建 Debug 版本的 APK
+      run: ./gradlew assembleDebug
 
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: apd
-          cache-targets: false
+    - name: Run tests with Gradle
+      # 运行单元测试
+      run: ./gradlew test
 
-      - name: Build with Gradle
-        run: |
-          echo 'org.gradle.parallel=true' >> gradle.properties
-          echo 'org.gradle.vfs.watch=true' >> gradle.properties
-          echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
-          echo 'android.native.buildOutput=verbose' >> gradle.properties
-          sed -i 's/org.gradle.configuration-cache=true//g' gradle.properties
-          ./gradlew clean assembleRelease
-          echo "BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)" >> $GITHUB_ENV
-
-      - name: Sign Release
-        env:
-          SIGNING_KEY: ${{ secrets.ANDROID_KEY_STORE }}
-          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
-        if: ${{ env.SIGNING_KEY != '' }}
-        continue-on-error: true
-        uses: kevin-david/zipalign-sign-android-release@v2
-        id: sign_app
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.ANDROID_KEY_STORE }}
-          alias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets. ANDROID_KEY_PASSWORD }}
-          zipAlign: true
-
-      - name: Upload Signed APK Artifact
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: APatchPlus-Signed-APK
-          path: app/build/outputs/apk/release/*.apk
-
-      - name: Post to channel
-        if: ${{github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && github.ref_type != 'tag'}}
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          COMMIT_ID: ${{ github.event.head_commit.id }}
-        run: |
-          if [ ! -z "${{ secrets.BOT_TOKEN }}" ]; then
-            OUTPUT="app/build/outputs/apk/release"
-            export Release=$(find $OUTPUT -name "*.apk")
-            URL=$(python3 .github/scripts/telegram_url.py -1002058433411)
-            curl -v "$URL" -F Release=@${{ steps.sign_app.outputs.signedReleaseFile }}
-            URL=$(python3 .github/scripts/telegram_url.py -1001910818234)
-            curl -v "$URL" -F Release=@${{ steps.sign_app.outputs.signedReleaseFile }}
-          fi
-
-      - name: Release apk
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        if: ${{ env.SIGNING_KEY != '' && github.ref_type == 'tag' }}
-        continue-on-error: true
-        uses: ncipollo/release-action@v1
-        with:
-          token: ${{ github.token }}
-          tag: ${{ steps.parse_version.outputs.VERSION }}
-          artifacts: ${{steps.sign_app.outputs.signedReleaseFile}}
-          generateReleaseNotes: true
-          makeLatest: true
-          replacesArtifacts: true
+    - name: Upload APK artifact
+      # 上传生成的 APK 文件作为工作流工件
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+        # 如果您有多个模块，路径可能需要调整，例如：
+        # path: **/outputs/apk/**/*.apk
+        retention-days: 7
