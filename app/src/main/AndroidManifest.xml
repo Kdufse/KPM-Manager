@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.yourcompany.yourapp"> <!-- 请替换为您的应用包名 -->
+    package="me.kdufse.kpmodulemanager"> <!-- 请替换为您的应用包名 -->
 
     <!-- 基础权限（根据需求选择添加） -->
     <uses-permission android:name="android.permission.INTERNET" />
