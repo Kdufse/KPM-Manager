@@ -23,7 +23,7 @@
     <string name="home_loaded_modules">已加载的内核模块数</string>
 
     <string name="module_list_title">内核模块</string>
-    <string name="module_list_title">已加载的内核模块</string>
+    <string name="module_list_founded_title">已加载的内核模块</string>
     <string name="module_list_empty">没有已加载的内核模块</string>
     <string name="module_list_refresh">刷新模块列表</string>
     <string name="module_list_load_module">加载内核模块</string>
